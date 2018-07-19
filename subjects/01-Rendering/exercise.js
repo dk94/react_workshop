@@ -29,24 +29,42 @@ const DATA = {
   ]
 };
 
-function Menu() {
+let selectedType='mexican';
+let order=1;
+function changeType(e) {
+  selectedType=e.target.value;
+
+  ReactDOM.render(<Menu selectedType={selectedType}/>, document.getElementById("app"));
+}
+function toggleOrder() {
+  order = order ? 0 : 1;
+
+  ReactDOM.render(<Menu selectedType={selectedType}/>, document.getElementById("app"));
+}
+function Menu(props) {
   return (
     <div>
     <h1>{DATA.title}</h1>
+    <select value={props.selectedType} onChange= {changeType} name='types'>
+      <option value='' />
+      <option value='mexican'>mexican</option>
+      <option value='english'>english</option>
+    </select>
     <ul>
       {
         DATA.items
-          .filter((food) => food.type === 'mexican')
-          .sort((a,b) => a.name > b.name)
+          .filter((food) => food.type === props.selectedType)
+          .sort((a,b) => order ? a.name > b.name : a.name < b.name)
           .map((food) => <li>{food.name}</li>)
       }
     </ul>
+    <button onClick={toggleOrder}>ToggleOrder</button>
   </div>
   )
 
 
 }
 
-ReactDOM.render(<Menu />, document.getElementById("app"));
+ReactDOM.render(<Menu selectedType={selectedType}/>, document.getElementById("app"));
 
 require("./tests").run();
