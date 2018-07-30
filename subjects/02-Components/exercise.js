@@ -34,30 +34,77 @@ styles.panel = {
   padding: 10
 };
 
+// class Tabs extends React.Component {
+//   render() {
+//     return (
+//       <div className="Tabs">
+//         {
+//           this.props.data.map((country => {
+//             return(
+//               <div 
+//                 onClick={this.props.onChangeTab.bind(null,country.id)} 
+//                 key = {country.id} 
+//                 style={this.props.activeId === country.id ?
+//                 styles.activeTab : styles.tab} 
+//                 className="Tab"
+//               >
+//                 {country.name}
+//               </div>
+//             )
+//           }))
+//         }
+//         <div className="TabPanel" style={styles.panel}>
+//           {this.props.data.find((country)=>country.id === this.props.activeId).description}
+//         </div>
+//       </div>
+//     );
+//   }
+// }
+
 class Tabs extends React.Component {
   render() {
     return (
       <div className="Tabs">
-        <div className="Tab" style={styles.activeTab}>
-          Active
-        </div>
-        <div className="Tab" style={styles.tab}>
-          Inactive
-        </div>
-        <div className="TabPanel" style={styles.panel}>
-          Panel
-        </div>
+        {this.props.children}
       </div>
     );
   }
 }
 
 class App extends React.Component {
+  state = {
+    activeId: 1
+  }
+  handleChangeTab = (id) => {
+    this.setState({
+      activeId: id
+    })
+  }
   render() {
     return (
       <div>
         <h1>Countries</h1>
-        <Tabs data={this.props.countries} />
+        <Tabs
+        >
+          {
+            this.props.countries.map((country => {
+              return (
+                  <div
+                    onClick={this.handleChangeTab.bind(null, country.id)}
+                    key={country.id}
+                    style={this.state.activeId === country.id ?
+                      styles.activeTab : styles.tab}
+                    className="Tab"
+                  >
+                    {country.name}
+                  </div>
+            )
+            }))
+          }
+          <div className="TabPanel" style={styles.panel}>
+            {this.props.countries.find((country)=>country.id === this.state.activeId).description}
+          </div>
+        </Tabs>
       </div>
     );
   }
