@@ -20,7 +20,35 @@ import ReactDOM from "react-dom";
 import serializeForm from "form-serialize";
 
 class CheckoutForm extends React.Component {
+  state={
+    isTheSame : false,
+    shippingName : '',
+    shippingState : '',
+    billingName     : '',
+    billingState  : ''
+  }
+
+  handleChange = (e) => {
+
+    const { target } = e;
+ 
+    if(target.type === 'checkbox')
+    this.setState((prevState) => (
+      {
+        isTheSame : !prevState.isTheSame
+      }
+    ))
+
+    if(target.type === 'text')
+    this.setState(() => (
+      {
+        [target.name] : target.value
+      }
+    ))
+  }
+  
   render() {
+    const { isTheSame, billingName, billingState, shippingName, shippingState } = this.state;
     return (
       <div>
         <h1>Checkout</h1>
@@ -29,12 +57,12 @@ class CheckoutForm extends React.Component {
             <legend>Billing Address</legend>
             <p>
               <label>
-                Billing Name: <input type="text" />
+                Billing Name: <input onChange={this.handleChange} name='billingName' value={billingName} type="text" />
               </label>
             </p>
             <p>
               <label>
-                Billing State: <input type="text" size="2" />
+                Billing State: <input onChange={this.handleChange} name='billingState' value={billingState} type="text" size="2" />
               </label>
             </p>
           </fieldset>
@@ -43,17 +71,17 @@ class CheckoutForm extends React.Component {
 
           <fieldset>
             <label>
-              <input type="checkbox" /> Same as billing
+              <input type="checkbox" onChange={this.handleChange} checked={isTheSame} /> Same as billing
             </label>
             <legend>Shipping Address</legend>
             <p>
               <label>
-                Shipping Name: <input type="text" />
+                Shipping Name: <input disabled={isTheSame} name='shippingName' onChange={this.handleChange} value={isTheSame ? billingName  : shippingName} type="text" />
               </label>
             </p>
             <p>
               <label>
-                Shipping State: <input type="text" size="2" />
+                Shipping State: <input disabled={isTheSame} name='shippingState' onChange={this.handleChange} value={isTheSame ? billingState : shippingState} type="text" size="2" />
               </label>
             </p>
           </fieldset>
